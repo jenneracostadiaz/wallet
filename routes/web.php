@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CategoryController;
 use App\Models\Account;
 use Illuminate\Support\Facades\Route;
 
@@ -29,4 +30,5 @@ Route::middleware([
     })->name('dashboard');
 
     Route::resource('accounts', AccountController::class);
+    Route::resource('categories', CategoryController::class);
 });

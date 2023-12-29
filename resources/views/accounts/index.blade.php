@@ -49,77 +49,75 @@
                 {{-- Grid of Accounts --}}
                 <div class="flex flex-col gap-4 items-center py-4 px-4 mt-4">
                     @foreach ($accounts as $account)
-                            <div class="w-full py-4 px-8 gap-4 rounded-md shadow-lg bg-slate-700 border-l-4" style="border-color: {{ $account->color }}">
-                                <div class="flex flex-row justify-between items-center gap-2">
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $account->icon }} {{ $account->name }}</span>
-                                    </div>
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-sm font-medium text-gray-900 dark:text-white">
-                                            @switch($account->type)
-                                                @case('general')
-                                                    General
-                                                    @break
-                                                @case('cash')
-                                                    Cash
-                                                    @break
-                                                @case('bank')
-                                                    Bank
-                                                    @break
-                                                @case('credit_card')
-                                                    Credit Card
-                                                    @break
-                                                @case('saving_account')
-                                                    Saving Account
-                                                    @break
-                                                @case('other')
-                                                    Other
-                                                    @break
-                                                @default
-                                                    Other
-                                            @endswitch
-                                        </span>
-                                    </div>
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $account->currency->symbol }} {{ $account->starting_balance }}</span>
-                                    </div>
-                                    <div class="flex justify-end items-end gap-2">
-                                        <a href="{{ route('accounts.edit', $account->id) }}" class="flex justify-center items-center py-2.5 px-3 text-sm font-medium text-white text-center bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                            ✏️
-                                            <span class="sm:ms-1">Edit</span>
-                                        </a>
-                                        <div class="relative">
-                                            <form id="delete-form" action="{{ route('accounts.destroy', $account->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" onclick="removeCategory()" class="flex justify-center items-center py-2.5 px-1 text-sm font-medium text-white text-center">
-                                                    🗑️
-                                                </button>
-                                                <button type="submit" class="hidden">
-                                                    delete
-                                                </button>
-                                            </form>
-                                        </div>
+                        <div class="w-full py-4 px-8 gap-4 rounded-md shadow-lg bg-slate-700 border-l-4" style="border-color: {{ $account->color }}">
+                            <div class="flex flex-row justify-between items-center gap-2">
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $account->icon }} {{ $account->name }}</span>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-sm font-medium text-gray-900 dark:text-white">
+                                        @switch($account->type)
+                                            @case('general')
+                                                General
+                                                @break
+                                            @case('cash')
+                                                Cash
+                                                @break
+                                            @case('bank')
+                                                Bank
+                                                @break
+                                            @case('credit_card')
+                                                Credit Card
+                                                @break
+                                            @case('saving_account')
+                                                Saving Account
+                                                @break
+                                            @case('other')
+                                                Other
+                                                @break
+                                            @default
+                                                Other
+                                        @endswitch
+                                    </span>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $account->currency->symbol }} {{ $account->starting_balance }}</span>
+                                </div>
+                                <div class="flex justify-end items-end gap-2">
+                                    <a href="{{ route('accounts.edit', $account->id) }}" class="flex justify-center items-center py-2.5 px-3 text-sm font-medium text-white text-center bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        ✏️
+                                        <span class="sm:ms-1">Edit</span>
+                                    </a>
+                                    <div class="relative">
+                                        <form id="delete-form-{{$account->id}}" action="{{ route('accounts.destroy', $account->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" onclick="removeCategory({{$account->id}})" class="flex justify-center items-center py-2.5 px-1 text-sm font-medium text-white text-center">
+                                                🗑️
+                                            </button>
+                                            <button type="submit" class="hidden">
+                                                delete
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                        
+                        </div>
                     @endforeach
+                </div>
             </div>
         </div>
     </div>
 
-    
-
     {{-- js --}}
-    
-        <script>
-            const removeCategory = () => {
-                const message = confirm('Are you sure?');
-                if (message) {
-                    document.querySelector('#delete-form').submit();
-                }
+    <script>
+        const removeCategory = (id) => {
+            const message = confirm(`Are you sure?`);
+            const form = document.querySelector(`#delete-form-${id}`);
+            if (message) {
+                form.submit();
             }
-        </script>
+        }
+    </script>
     
 </x-app-layout>
