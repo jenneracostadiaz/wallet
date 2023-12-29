@@ -32,4 +32,9 @@ class Account extends Model
     {
         return $this->hasMany(Record::class);
     }
+
+    public function accountMeta()
+    {
+        return $this->hasMany(AccountMeta::class);
+    }
 }
