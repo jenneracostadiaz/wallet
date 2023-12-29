@@ -5,8 +5,8 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-mark class="block h-9 w-auto" />
+                    <a href="{{ route('dashboard') }}">                        
+                        <h1 class="text-3xl dark:text-white font-black">💵 Wallet</h1>
                     </a>
                 </div>
 
