@@ -25,11 +25,6 @@
                             <x-input id="name" name="name" type="text" class="block mt-1 w-full" placeholder="Ex. Joe Done" required autofocus value="{{ $category->name }}" />
                         </div>
                         <div class="flex gap-2">
-                            {{-- Color --}}
-                            <div class="flex flex-col flex-1 gap-1">
-                                <x-label for="color" value="{{ __('Color') }}" />
-                                <input type="color" name="color" id="color" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full" value="{{ $category->color }}">
-                            </div>
                             {{-- Icon --}}
                             <div class="flex flex-col flex-1 gap-1">
                                 <x-label for="icon" value="{{ __('Icon') }}" />

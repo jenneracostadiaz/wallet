@@ -69,7 +69,7 @@
 
                         {{-- Submit --}}
                         <div class="flex flex-col items-center flex-1 gap-1">
-                            <x-button class="bg-blue-700 hover:bg-blue-800 dark:text-white dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <x-button>
                                 🔁 {{ __('Update Account') }}
                             </x-button>
                         </div>

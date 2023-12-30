@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LabelController;
 use App\Models\Account;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,5 @@ Route::middleware([
 
     Route::resource('accounts', AccountController::class);
     Route::resource('categories', CategoryController::class);
+    Route::resource('labels', LabelController::class);
 });

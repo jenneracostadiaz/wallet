@@ -55,7 +55,6 @@ class CategoryController extends Controller
             'name' => $request->name,
             'slug' => $slug,
             'visibility' => $visibility,
-            'color' => $request->color,
             'icon' => $request->icon,
             'parent_id' => $request->parent_id,
             'order_column' => $order_column,
@@ -97,7 +96,6 @@ class CategoryController extends Controller
 
         Category::find($id)->update([
             'name' => $request->name,
-            'color' => $request->color,
             'icon' => $request->icon,
             'parent_id' => $request->parent_id,
         ]);
