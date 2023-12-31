@@ -48,16 +48,18 @@ class AccountController extends Controller
 
         $slug = str_replace(' ', '-', strtolower($request->name));
 
+        $current_balance = $request->starting_balance;
+
         Account::create([
             'name' => $request->name,
-            'currency_id' => $currency->id,
-            'starting_balance' => $request->starting_balance,
             'type' => $request->type,
             'color' => $request->color,
             'icon' => $request->icon,
-            'visibility' => true,
             'order_column' => $order,
             'slug' => $slug,
+            'starting_balance' => $request->starting_balance,
+            'current_balance' => $current_balance,
+            'currency_id' => $currency->id,
         ]);
 
         return redirect()->route('accounts.index')->with('success', 'Account created successfully.');
@@ -97,10 +99,15 @@ class AccountController extends Controller
 
         $account = Account::findOrFail($id);
 
+        $starting_balance = $account->starting_balance;
+
+        $current_balance = $account->current_balance + ($request->starting_balance - $starting_balance);
+
         $account->update([
             'name' => $request->name,
             'currency_id' => $currency->id,
             'starting_balance' => $request->starting_balance,
+            'current_balance' => $current_balance,
             'type' => $request->type,
             'color' => $request->color,
             'icon' => $request->icon,

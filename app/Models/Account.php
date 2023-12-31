@@ -19,6 +19,7 @@ class Account extends Model
         'order_column',
         'slug',
         'starting_balance',
+        'current_balance',
         'currency_id',
     ];
 

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('order_column')->default(0);
             $table->string('slug')->unique();
             $table->decimal('starting_balance', 10, 2)->default(0);
+            $table->decimal('current_balance', 10, 2)->default(0);
             
             $table->foreignId('currency_id')->constrained('currencies')->onDelete('cascade');
 

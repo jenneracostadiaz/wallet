@@ -81,7 +81,13 @@
                                     </span>
                                 </div>
                                 <div class="flex flex-col gap-1">
-                                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $account->currency->symbol }} {{ $account->starting_balance }}</span>
+                                    <span class="text-sm font-medium text-gray-900 dark:text-white">
+                                        {{ $account->currency->symbol }} {{ $account->current_balance }}
+                                    </span>
+                                    <span class="text-xs font-medium text-gray-900 dark:text-slate-300">
+                                        Starting Balance:
+                                        {{ $account->currency->symbol }} {{ $account->starting_balance }}
+                                    </span>
                                 </div>
                                 <div class="flex justify-end items-end gap-2">
                                     <a href="{{ route('accounts.edit', $account->id) }}" class="flex justify-center items-center py-2.5 px-3 text-sm font-medium text-white text-center bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">

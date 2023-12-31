@@ -120,6 +120,17 @@ class RecordController extends Controller
         $record->user_id = $user_id;
         $record->save();
 
+        // Agregar el monto a la cuenta
+        $account = Account::findOrFail($request->account);
+        $account->current_balance += $amount;
+        $account->save();
+
+        if($request->type === 'transfer'){
+            $account_two = Account::findOrFail($request->account_2);
+            $account_two->current_balance += $amount_2;
+            $account_two->save();
+        }
+
         return redirect()->route('records.index')->with('success', 'Record created successfully.');
     }
 
