@@ -111,9 +111,11 @@
                                     @endif
                                 </div>
                                 <div class="flex justify-end items-end gap-2 order-4 sm:order-5">
-                                    <a href="{{ route('records.edit', $record->id) }}">
-                                        ✏️
-                                    </a>
+                                    {{-- @if($record->type != 'transfer')
+                                        <a href="{{ route('records.edit', $record->id) }}">
+                                            ✏️
+                                        </a>
+                                    @endif --}}
                                     <button type="button" onclick="removeLabel({{ $record->id }})">
                                         🗑️
                                     </button>
