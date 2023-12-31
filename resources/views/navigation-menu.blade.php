@@ -158,6 +158,22 @@
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            {{-- Records --}}
+            <x-responsive-nav-link href="{{ route('records.index') }}" :active="request()->routeIs('records.index')">
+                {{ __('Records') }}
+            </x-responsive-nav-link>
+            {{-- Account --}}
+            <x-responsive-nav-link href="{{ route('accounts.index') }}" :active="request()->routeIs('accounts.index')">
+                {{ __('Accounts') }}
+            </x-responsive-nav-link>
+            {{-- Category --}}
+            <x-responsive-nav-link href="{{ route('categories.index') }}" :active="request()->routeIs('categories.index')">
+                {{ __('Categories') }}
+            </x-responsive-nav-link>
+            {{-- Labels --}}
+            <x-responsive-nav-link href="{{ route('labels.index') }}" :active="request()->routeIs('labels.index')">
+                {{ __('Labels') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
