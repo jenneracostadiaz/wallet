@@ -67,7 +67,7 @@ class RecordController extends Controller
             'account' => 'required|exists:accounts,id',
             'currency' => 'required|exists:currencies,id',
             'category' => 'nullable|exists:categories,id',
-            'label' => 'nullable|exists:labels,id',
+            'label' => 'nullable',
             'amount' => 'required|numeric',
             'date' => 'required|date',
             'time' => 'required|date_format:H:i',
@@ -75,13 +75,46 @@ class RecordController extends Controller
 
         $user_id = auth()->user()->id;
 
+        if($request->type === 'expense'){
+            $amount = -$request->amount;
+        }
+
+        if($request->type === 'income'){
+            $amount = $request->amount;
+        }
+
+        if($request->type === 'transfer'){
+            $request->validate([
+                'account_2' => 'required|exists:accounts,id',
+                'currency_2' => 'required|exists:currencies,id',
+                'amount_2' => 'required|numeric',
+            ]);
+
+            $amount = -$request->amount;
+            $amount_2 = $request->amount_2;
+        }
+
+        if($request->type === 'transfer'){
+            $record_two = new Record();
+            $record_two->type = $request->type;
+            $record_two->account_id = $request->account_2;
+            $record_two->amount = $amount_2;
+            $record_two->currency_id = $request->currency_2;
+            $record_two->category_id = $request->category;
+            $record_two->label_id = ($request->label == "none") ? null : $request->label;
+            $record_two->date = $request->date;
+            $record_two->time = $request->time;
+            $record_two->user_id = $user_id;
+            $record_two->save();
+        }
+
         $record = new Record();
         $record->type = $request->type;
         $record->account_id = $request->account;
-        $record->amount = $request->amount;
+        $record->amount = $amount;
         $record->currency_id = $request->currency;
         $record->category_id = $request->category;
-        $record->label_id = $request->label;
+        $record->label_id = ($request->label == "none") ? null : $request->label;
         $record->date = $request->date;
         $record->time = $request->time;
         $record->user_id = $user_id;

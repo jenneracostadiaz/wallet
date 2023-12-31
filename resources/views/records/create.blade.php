@@ -16,6 +16,20 @@
                 </div>
 
                 <div class="flex flex-col gap-4 sm:gap-24 items-center py-8 px-4 border-t border-gray-100 mt-2 pt-8">
+                    {{-- Mensaje de error --}}
+                    @if ($errors->any())
+                        <div class="flex flex-col gap-2 items-center">
+                            <div class="font-medium text-red-600">
+                                {{ __('Whoops! Something went wrong.') }}
+                            </div>
+
+                            <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                                @foreach ($errors->all() as $error)
+                                    <li class="text-xs">{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <form action="{{ route('records.store')}}" method="POST" class="w-full max-w-lg flex flex-col flex-1 gap-4" x-data="{ transfer: false }">
                         @csrf
                         <div class="flex flex-col flex-1 gap-1">
@@ -57,7 +71,10 @@
                                     {{-- Amount --}}
                                     <div class="flex flex-col flex-1 gap-1">
                                         <x-label for="amount" value="{{ __('Amount') }}" />
-                                        <x-input id="amount" class="block mt-1 w-full" type="number" name="amount" :value="old('ammount', 0.00)" min="0.00" max="10000.00" step="0.10" attern="^\d*(\.\d{2}$)?" required autofocus />
+                                        <div class="flex items-center gap-1">
+                                            <div id="symbol_amount" class="text-xs">➖</div>
+                                            <x-input id="amount" class="block mt-1 w-full" type="number" name="amount" :value="old('ammount', 0.00)" min="0.00" max="10000.00" step="0.10" attern="^\d*(\.\d{2}$)?" required autofocus />
+                                        </div>
                                     </div>
                                     {{-- Currency --}}
                                     <div class="flex flex-col flex-1 gap-1">
@@ -83,8 +100,12 @@
                                     <div class="flex flex-col flex-1 gap-1">
                                         <x-label for="account_2" value="{{ __('To Account') }}" />
                                         <select id="account_2" name="account_2" type="text" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full" required autofocus >
-                                            @foreach ($accounts as $account)
-                                                <option value="{{ $account->id }}">{{ $account->icon }} {{ $account->name }}</option>
+                                            @foreach ($accounts as $key => $account)
+                                                <option value="{{ $account->id }}"
+                                                    @if ($key == 0)
+                                                        disabled
+                                                    @endif
+                                                >{{ $account->icon }} {{ $account->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -93,14 +114,17 @@
                                         
                                         <div class="flex flex-col flex-1 gap-1">
                                             <x-label for="amount_2" value="{{ __('Amount') }}" />
-                                            <x-input id="amount_2" class="block mt-1 w-full" type="number" name="amount_2" :value="old('ammount', 0.00)" min="0.00" max="10000.00" step="0.10" attern="^\d*(\.\d{2}$)?" required autofocus />
+                                            <div class="flex items-center gap-1">
+                                                <div id="symbol_amount_2" class="text-xs">➕</div>
+                                                <x-input id="amount_2" class="block mt-1 w-full" type="number" name="amount_2" :value="old('ammount', 0.00)" min="0.00" max="10000.00" step="0.10" attern="^\d*(\.\d{2}$)?" required autofocus />
+                                            </div>
                                         </div>
                                         
                                         <div class="flex flex-col flex-1 gap-1">
                                             <x-label for="currency_2" value="{{ __('Currency') }}" />
                                             <select id="currency_2" name="currency_2" type="text" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full" required autofocus >
                                                 @foreach ($currencies as $currency)
-                                                    <option value="{{ $currency->id }}">{{ $currency->symbol }} {{ $currency->name }}</option>
+                                                    <option value="{{ $currency->id }}"> {{ $currency->symbol }} {{ $currency->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -130,8 +154,8 @@
                             {{-- Label --}}
                             <div class="flex flex-col flex-1 gap-1">
                                 <x-label for="label" value="{{ __('Label') }}" />
-                                <select id="label" name="label" type="text" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full" required autofocus >
-                                    <option>None</option>
+                                <select id="label" name="label" type="text" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full" autofocus >
+                                    <option value="none">None</option>
                                     @foreach ($labels as $label)
                                         <option value="{{ $label->id }}">
                                              {{ $label->name }}
@@ -169,4 +193,62 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const type = document.getElementsByName('type');
+        const symbol_amount = document.getElementById('symbol_amount');
+        
+        type.forEach(element => {
+            element.addEventListener('change', () => {
+                if (element.value == 'expense') {
+                    symbol_amount.innerHTML = '➖';
+                } else if (element.value == 'income') {
+                    symbol_amount.innerHTML = '➕';
+                } else if (element.value == 'transfer') {
+                    const symbol_amount_2 = document.getElementById('symbol_amount_2');
+                    symbol_amount.innerHTML = '➖';
+                    symbol_amount_2.innerHTML = '➕';
+                }
+
+                if (element.value == 'transfer'){
+                    const amount = document.getElementById('amount');
+                    const amount_2 = document.getElementById('amount_2');
+                    const currency = document.getElementById('currency');
+                    const currency_2 = document.getElementById('currency_2');
+                    const account = document.getElementById('account');
+                    const account_2 = document.getElementById('account_2');
+
+                    amount.addEventListener('change', () => {
+                        amount_2.value = amount.value;
+                    });
+
+                    amount_2.addEventListener('change', () => {
+                        amount.value = amount_2.value;
+                    });
+
+                    account.addEventListener('change', () => {
+                        const selectedValue = account.value;
+                        for (let i = 0; i < account_2.options.length; i++) {
+                            if (account_2.options[i].value === selectedValue) {
+                                account_2.options[i].disabled = true;
+                            } else {
+                                account_2.options[i].disabled = false;
+                            }
+                        }
+                    });
+
+                    account_2.addEventListener('change', () => {
+                        const selectedValue = account_2.value;
+                        for (let i = 0; i < account.options.length; i++) {
+                            if (account.options[i].value === selectedValue) {
+                                account.options[i].disabled = true;
+                            } else {
+                                account.options[i].disabled = false;
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </x-app-layout>
