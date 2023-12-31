@@ -23,7 +23,6 @@ return new class extends Migration
             $table->foreignId('label_id')->nullable()->constrained('labels')->onDelete('cascade');
             $table->date('date');
             $table->time('time')->nullable();
-            $table->text('description')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
             $table->timestamps();
