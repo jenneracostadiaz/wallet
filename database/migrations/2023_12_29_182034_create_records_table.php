@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('records', function (Blueprint $table) {
             $table->id();
-            // Type, account_id, amount, currency_id, category_id, label_id, date, time, description, user_id
 
             $table->enum('type', ['expense', 'income', 'transfer'])->default('expense');
             $table->foreignId('account_id')->constrained('accounts')->onDelete('cascade');

@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Account;
 use App\Models\Currency;
+use App\Models\Record;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Balance extends Component
@@ -32,14 +34,22 @@ class Balance extends Component
         $accounts_USD = number_format($accounts_USD, 2, '.', ',');
         $accounts_EUR = number_format($accounts_EUR, 2, '.', ',');
 
-        // Suma de current_balance de accounts tipo bank
         $accounts_bank_sum = Account::where('type', 'bank')->sum('current_balance');
         $accounts_bank_sum = number_format($accounts_bank_sum, 2, '.', ',');
 
-        // Suma de current_balance de accounts tipo credit_card
         $accounts_credit_card_sum = Account::where('type', 'credit_card')->sum('current_balance');
         $accounts_credit_card_sum = number_format($accounts_credit_card_sum, 2, '.', ',');
 
-        return view('livewire.balance', compact('accounts_PEN', 'accounts_USD', 'balance', 'accounts_bank_sum', 'accounts_credit_card_sum'));
+        // Obtener la suma de los amount de la tabla records por cada día del mes actual
+        $startOfMonth = now()->startOfMonth();
+        $endOfMonth = now()->endOfMonth();
+
+        $record_by_days = DB::table('records')
+            ->select(DB::raw('DATE(date) as day'), DB::raw('SUM(amount) as total_amount'))
+            ->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->groupBy('day')
+            ->get();
+
+        return view('livewire.balance', compact('accounts_PEN', 'accounts_USD', 'balance', 'accounts_bank_sum', 'accounts_credit_card_sum', 'record_by_days'));
     }
 }
