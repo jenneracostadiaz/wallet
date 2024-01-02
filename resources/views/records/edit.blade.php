@@ -83,7 +83,7 @@
                                                 @endif
                                             </div>
                                             <x-input id="amount" class="block mt-1 w-full" type="number" name="amount"
-                                            :value="old('amount', ($record->amount * -1))"
+                                            :value="old('amount', (($record->type == 'expense') ? $record->amount * -1 : $record->amount))"
                                              min="0.00" max="10000.00" step="0.10" attern="^\d*(\.\d{2}$)?" required autofocus />
                                         </div>
                                     </div>

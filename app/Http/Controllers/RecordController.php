@@ -195,6 +195,11 @@ class RecordController extends Controller
             $amount = $request->amount;
         }
 
+        //Eliminamos el monto de la cuenta
+        $account = Account::findOrFail($record->account_id);
+        $account->current_balance -= $record->amount;
+        $account->save();
+
         $record->update([
             'type' => $request->type,
             'account_id' => $request->account,
@@ -208,9 +213,8 @@ class RecordController extends Controller
         ]);
 
         // TODO: Actualizar el monto de la cuenta
-        // Eliminamos el monto anterior de la cuenta y agregamos el nuevo monto
-        $account = Account::findOrFail($record->account_id);
-        $account->current_balance -= $record->amount;
+        // Agregamos el monto a la cuenta
+        $account = Account::findOrFail($request->account);
         $account->current_balance += $amount;
         $account->save();
 
