@@ -1,5 +1,4 @@
 @php
-    $accounts = \App\Models\Account::all();
     $records = \App\Models\Record::where('user_id', auth()->user()->id)
             ->with('account', 'currency', 'category', 'label')
             ->orderBy('date', 'desc')
@@ -8,53 +7,9 @@
 @endphp
 
 <div class="p-6 lg:p-8 bg-white dark:text-white dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent border-b border-gray-200 dark:border-gray-700">
-    <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Accounts</h2>
-    <div class="w-full grid grid-cols-1 gap-6 lg:gap-8">
-        @foreach ($accounts as $account)
-            <div class="w-full py-4 px-8 gap-4 rounded-md shadow-lg bg-slate-700 border-l-4" style="border-color: {{ $account->color }}">
-                <div class="w-full flex flex-row justify-between items-center gap-2">
-                    <div class="flex flex-col gap-1">
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $account->icon }} {{ $account->name }}</span>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">
-                            @switch($account->type)
-                                @case('general')
-                                    General
-                                    @break
-                                @case('cash')
-                                    Cash
-                                    @break
-                                @case('bank')
-                                    Bank
-                                    @break
-                                @case('credit_card')
-                                    Credit Card
-                                    @break
-                                @case('saving_account')
-                                    Saving Account
-                                    @break
-                                @case('other')
-                                    Other
-                                    @break
-                                @default
-                                    Other
-                            @endswitch
-                        </span>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">
-                            {{ $account->currency->symbol }} {{ $account->current_balance }}
-                        </span>
-                        <span class="text-xs font-medium text-gray-900 dark:text-slate-300">
-                            Starting Balance:
-                            {{ $account->currency->symbol }} {{ $account->starting_balance }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
+    {{-- Importe Livewire Balance --}}
+    <livewire:balance />
+    
 </div>
 
 <div class="bg-gray-200 dark:text-white dark:bg-gray-800 bg-opacity-25 grid grid-cols-1 lg:gap-8 p-6 lg:p-8">
