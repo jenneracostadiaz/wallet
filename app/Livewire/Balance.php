@@ -26,8 +26,8 @@ class Balance extends Component
         $compra_dolar = $data['compra'];
         $venta_dolar = $data['venta'];
         
-        $accounts_USD = $accounts_USD * $compra_dolar;
-        $balance = $accounts_PEN + $accounts_USD + $accounts_EUR;
+        $accounts_USD = $accounts_USD;
+        $balance = $accounts_PEN + ($accounts_USD * $compra_dolar) + $accounts_EUR;
         $balance = number_format($balance, 2, '.', ',');
 
         $accounts_PEN = number_format($accounts_PEN, 2, '.', ',');
@@ -40,7 +40,6 @@ class Balance extends Component
         $accounts_credit_card_sum = Account::where('type', 'credit_card')->sum('current_balance');
         $accounts_credit_card_sum = number_format($accounts_credit_card_sum, 2, '.', ',');
 
-        // Obtener la suma de los amount de la tabla records por cada día del mes actual
         $startOfMonth = now()->startOfMonth();
         $endOfMonth = now()->endOfMonth();
 
@@ -50,6 +49,22 @@ class Balance extends Component
             ->groupBy('day')
             ->get();
 
-        return view('livewire.balance', compact('accounts_PEN', 'accounts_USD', 'balance', 'accounts_bank_sum', 'accounts_credit_card_sum', 'record_by_days'));
+        $record_by_category = DB::table('records')
+            ->select(DB::raw('category_id'), DB::raw('SUM(amount) as total_amount'))
+            ->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->groupBy('category_id')
+            ->get();
+
+        foreach ($record_by_category as $key => $value) {
+            $category = DB::table('categories')
+                ->select('name')
+                ->where('id', $value->category_id)
+                ->first();
+            $record_by_category[$key]->category_name = $category->name;
+        }
+
+        $record_by_category = $record_by_category->sortByDesc('total_amount');
+
+        return view('livewire.balance', compact('accounts_PEN', 'accounts_USD', 'balance', 'accounts_bank_sum', 'accounts_credit_card_sum', 'record_by_days', 'record_by_category'));
     }
 }
